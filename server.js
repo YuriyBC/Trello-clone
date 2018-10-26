@@ -33,8 +33,8 @@ const BOARDS_TABLE = 'boards';
 const CATALOG_TABLE = 'catalog';
 const TASKS_TABLE = 'taskscollection';
 
-let qrBoard = `CREATE TABLE IF NOT EXISTS ${BOARDS_TABLE} (id MEDIUMINT NOT NULL AUTO_INCREMENT, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, PRIMARY KEY (id))`;
-let qrCatalog = `CREATE TABLE IF NOT EXISTS ${CATALOG_TABLE} (id MEDIUMINT NOT NULL AUTO_INCREMENT, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, board int, PRIMARY KEY (id))`;
+let qrBoard = `CREATE TABLE IF NOT EXISTS ${BOARDS_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, PRIMARY KEY (id))`;
+let qrCatalog = `CREATE TABLE IF NOT EXISTS ${CATALOG_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, board int, PRIMARY KEY (id))`;
 let qrTasks = `CREATE TABLE IF NOT EXISTS ${TASKS_TABLE} (id int, board int, catalog int, title VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, isComplited VARCHAR(15))`;
 db.query(qrBoard);
 db.query(qrCatalog);
@@ -46,7 +46,7 @@ app.get('/boards', function (req, res) {
         res.status(200)
         res.send(resp)
     })
-})
+});
 
 app.post('/boards', function (req, res) {
     if (req.originalUrl === '/boards') {
@@ -89,12 +89,12 @@ app.get('/catalog', function (req, res) {
     res.header('Access-Control-Allow-Methods', 'POST');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    const boardId = req.query.boardId
-    let qeeryTasks = `SELECT * FROM ${TASKS_TABLE} WHERE board = ${+boardId}`
-    let query = `SELECT *  FROM catalog WHERE board = ${+boardId}`
+    const boardId = req.query.boardId;
+    let qeeryTasks = `SELECT * FROM ${TASKS_TABLE} WHERE board = ${+boardId}`;
+    let query = `SELECT *  FROM catalog WHERE board = ${+boardId}`;
     db.query(query, function(error, success) {
         if (success) {
-            let resultData = [...success]
+            let resultData = [...success];
             db.query(qeeryTasks, function (er, tasks) {
                 resultData.map((catalog) => {
                     catalog.tasks = [];
@@ -111,35 +111,43 @@ app.get('/catalog', function (req, res) {
             res.status(400);
             res.send(error)
         }
-
     })
-
-
-})
+});
 
 app.post('/catalog', function (req, res) {
     if (req.originalUrl === '/catalog') {
-        let data = req.body
-            const query = `INSERT INTO catalog (title, board) VALUES ('${data.title}', '${data.boardId}')`
+        let data = req.body;
+            const query = `INSERT INTO catalog (id, title, board) VALUES (${data.id}, '${data.title}', '${data.boardId}')`
             db.query(query, function (er, suc) {
                 if (!er) {
-                    res.status(200)
+                    res.status(200);
                     res.send(data)
                 } else {
-                    res.status(401)
+                    res.status(401);
                     res.send(er)
                 }
             })
         }
+});
 
-})
+app.delete('/catalog', function (req, res) {
+    const {boardId, catalogId} = req.body;
+    const qrCatalog = `DELETE FROM ${CATALOG_TABLE} WHERE board = ${boardId} AND id = ${catalogId}`;
+    const qrTasks = `DELETE FROM ${TASKS_TABLE} WHERE board = ${boardId} AND catalog = ${catalogId}`;
+    db.query(qrCatalog, function(err, data) {
+        if (!err) {
+            db.query(qrTasks);
+            res.status(200);
+            res.send(data)
+        }
+    });
 
-
+});
 
 app.post('/tasks', function (req, res) {
     let allTasks = req.body.data;
     let boardId = req.body.boardId;
-    let query = 'SELECT * from taskscollection'
+    let query = 'SELECT * from taskscollection';
 
     db.query(`DELETE FROM ${TASKS_TABLE} WHERE board = ${boardId}`, (err, suc) => {
         allTasks.forEach((task) => {
@@ -147,13 +155,12 @@ app.post('/tasks', function (req, res) {
               console.log(error)
             })
         })
-    })
+    });
 
     db.query(query, function (er, suc) {
-        res.status(200)
+        res.status(200);
         res.send(suc)
     })
-
 });
 
 // TASKS

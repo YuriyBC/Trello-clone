@@ -6,7 +6,7 @@ const headers = {
     "post": {
         "Content-type": "application/json"
     }
-}
+};
 
 // BOARDS START
 export const getBoard = () => {
@@ -42,18 +42,27 @@ export const removeBoard = (payload) => {
 const getCatalogs = () => {
     const URL = API + '/catalogs'
 
-}
+};
+
+export const deleteCatalog = (payload) => {
+    const url = API + '/catalog';
+    return fetch(url, {
+        method: 'DELETE',
+        headers: headers.delete,
+        body: JSON.stringify(payload)
+    })
+};
 
 export const addCatalog = (data) => {
-    let payload = {...data}
-    payload.tasks = ''
-    const url = API + '/catalog'
+    let payload = {...data};
+    payload.tasks = '';
+    const url = API + '/catalog';
     return fetch(url, {
         method: 'POST',
         headers: headers.post,
         body: JSON.stringify(payload)
     })
-}
+};
 
 export const getCatalog = (boardId) => {
     let url = API + `/catalog?boardId=${boardId}`
@@ -63,14 +72,12 @@ export const getCatalog = (boardId) => {
 };
 
 export const changeCatalog = (payload) => {
-    const url = API + '/tasks'
+    const url = API + '/tasks';
     fetch(url, {
         method: 'POST',
         headers: headers.post,
         body: JSON.stringify(payload)
     })
-}
-
-
+};
 
 // CATALOG END

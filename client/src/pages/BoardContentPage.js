@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { BoardContentComponent } from '../components/board-content/boardContent'
 import { connect } from 'react-redux'
-import {
-    Redirect
-} from 'react-router-dom'
 import {getCatalog} from '../utils/api'
 
 class BoardContent extends Component {
@@ -65,9 +62,14 @@ class BoardContent extends Component {
         this.props.actions({type: 'SWITCH_TASK_IN_THE_CATALOG', payload: [this.boardId, catalogId, taskId]})
     }
 
+    deleteCatalog (catalogId) {
+        this.props.actions({type: 'DELETE_CATALOG', payload: {boardId: this.boardId, catalogId}})
+    };
+
     render () {
         const currentCatalogs = this.props.globalStore.catalogList[this.boardId] || []
         return <BoardContentComponent
+                    deleteCatalog={this.deleteCatalog.bind(this)}
                     isCreateMode={this.state.isCreateMode}
                     currentCatalogs={currentCatalogs}
                     switchCreateMode={this.switchCreateMode.bind(this)}

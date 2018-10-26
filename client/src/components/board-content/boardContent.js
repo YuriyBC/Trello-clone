@@ -14,28 +14,30 @@ export const BoardContentComponent = (props) => {
         addTaskInCatalog,
         switchTaskInCatalog,
         dragElementInCatalog,
+        deleteCatalog,
         removeItemFromCatalog
-    } = props
+    } = props;
 
     const currentBoard = boardList.filter((board) => {
         return board.id.toString() === id.toString()
-    })[0]
+    })[0];
 
     const CatalogList = (props) => {
         const {
             currentCatalogs,
             addTaskInCatalog,
             switchTaskInCatalog
-        } = props
+        } = props;
 
         let catalogList = currentCatalogs.map((cat) => {
             return <CatalogItem
                 item={cat}
+                deleteCatalog={deleteCatalog}
                 dragElementInCatalog={dragElementInCatalog}
                 switchTaskInCatalog={switchTaskInCatalog}
                 addTaskInCatalog={addTaskInCatalog}
                 key={cat.id}/>
-        })
+        });
         return (
             catalogList
         )

@@ -4,10 +4,15 @@ import { BoardListComponent } from '../components/board/BoardListComponent'
 import { connect } from 'react-redux'
 import {getBoard, deleteAllBoards} from '../utils/api'
 import models from '../utils/models'
+import methods from '../utils/_methods'
 
 const {
  BoardModel
 } = models;
+
+const {
+    calculateNextId
+} = methods;
 
 class Main extends Component {
   constructor (props) {
@@ -23,12 +28,13 @@ class Main extends Component {
         this.setState({errorMessage:payload})
     };
     this.createNewBoard = (val) => {
-        const namesOfExistingBoards = this.props.state.boardList.map((i) => {return i.name})
-        const isNameUnique = namesOfExistingBoards.indexOf(val) === -1
+        const namesOfExistingBoards = this.props.state.boardList.map((i) => {return i.name});
+        const isNameUnique = namesOfExistingBoards.indexOf(val) === -1;
 
         if (isNameUnique) {
-            let newBoard = new BoardModel(val)
-            newBoard.id = this.props.state.boardList.length * Math.random(1, 99);
+            let newBoard = new BoardModel(val);
+
+            newBoard.id = calculateNextId(this.props.state.boardList);
             this.props.actions({type: 'ADD_BOARD_IN_THE_LIST', payload: newBoard});
             this.switchCreateContainerBox()
         }

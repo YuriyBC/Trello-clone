@@ -1,12 +1,12 @@
-import _methods from '../utils/_methods'
 import _models from '../utils/models'
 import {addCatalog} from '../utils/api'
 import {changeCatalog} from '../utils/api'
+import {deleteCatalog} from '../utils/api'
 
 const {
     CatalogItemModel,
     TaskModel
-} = _models
+} = _models;
 
 const initialState = {}
 
@@ -49,17 +49,29 @@ export default function catalogList (state = initialState, action) {
         case 'ADD_CATALOG_IN_THE_BOARD':
             function addCatalogInBoard (payload) {
                 const [boardId, catalogTitle] = payload
-                let newState = {...state}
+                let newState = {...state};
                 if (!newState[+boardId]) newState[+boardId] = []
                 const catalog_id = newState[boardId].length
 
                 const newObj = new CatalogItemModel(catalogTitle, catalog_id, boardId)
-                addCatalog(newObj)
+                addCatalog(newObj);
 
-                newState[boardId].push(newObj)
+                newState[boardId].push(newObj);
                 return newState
             }
             return addCatalogInBoard(action.payload)
+        case 'DELETE_CATALOG':
+            return function () {
+                let newState = {...state};
+                const {boardId, catalogId} = action.payload;
+
+                newState[boardId] = newState[boardId].filter((catalog) => {
+                    return catalog.id !== catalogId
+                });
+                deleteCatalog({boardId, catalogId});
+
+                return newState
+            }();
         case 'ADD_TASK_IN_THE_CATALOG':
             return function () {
                 const [boardId, catalogId, taskTitle] = action.payload;
@@ -117,7 +129,7 @@ export default function catalogList (state = initialState, action) {
                 let newState = {...state}
                 const dragCatalogId = value.catalogId.toString()
                 let dragCatalog = newState[boardId].filter((b) => {return b.id.toString() === dragCatalogId})[0];
-                let tasksWithoutDraggble = dragCatalog.tasks.filter((t) => t.id !== value.id)
+                let tasksWithoutDraggble = dragCatalog.tasks.filter((t) => t.id !== value.id);
 
                 dragCatalog.tasks = tasksWithoutDraggble;
 

@@ -4,12 +4,18 @@ import './Catalog.css';
 import '../../assets/css/fontawesome-all.min.css'
 
 export const CatalogItem = (props) => {
-    const { item, addTaskInCatalog, switchTaskInCatalog, dragElementInCatalog } = props
+    const {
+        item,
+        addTaskInCatalog,
+        deleteCatalog,
+        switchTaskInCatalog,
+        dragElementInCatalog } = props;
+
     function onDrop (ev) {
         ev.preventDefault()
-        let payload = ev.dataTransfer.getData('task')
-        payload = payload ? JSON.parse(payload) : null
-        payload.aimCatalogId = +ev.currentTarget.id
+        let payload = ev.dataTransfer.getData('task');
+        payload = payload ? JSON.parse(payload) : null;
+        payload.aimCatalogId = +ev.currentTarget.id;
 
         dragElementInCatalog(payload)
     }
@@ -20,15 +26,18 @@ export const CatalogItem = (props) => {
     }
 
     function allowDrop (ev) {
-        ev.preventDefault()
+        ev.preventDefault();
         ev.stopPropagation()
     }
+
     return (
         <div
             id={item.id}
             onDrop={onDrop}
             onDragOver={allowDrop}
             className="catalog__item">
+            <i onClick={() => {deleteCatalog(item.id)}}
+               className="catalog__item-close fas fa-times"/>
         <div className="catalog__item-title">{item.title}</div>
         <input type="text"
                className="taskForm"
