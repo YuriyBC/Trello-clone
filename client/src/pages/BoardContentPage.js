@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BoardContentComponent } from '../components/board-content/boardContent'
 import { connect } from 'react-redux'
-import {getCatalog} from '../utils/api'
+import {getBoard, getCatalog} from '../utils/api'
 
 class BoardContent extends Component {
     constructor (props) {
@@ -9,12 +9,15 @@ class BoardContent extends Component {
         this.boardId = +this.props.match.params.boardId
         this.state = {
             isCreateMode: true
-        }
+        };
     }
+    componentDidMount() {
+        getBoard().then(res => {
+            this.props.actions({type: 'SET_STATE', payload: res})
+        });
 
-    componentDidMount () {
         getCatalog(this.boardId).then(resp => {
-           this.props.actions({type: 'SET_CATALOGS', payload: resp})
+            this.props.actions({type: 'SET_CATALOGS', payload: resp})
         })
     }
 

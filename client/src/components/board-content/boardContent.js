@@ -41,15 +41,15 @@ export const BoardContentComponent = (props) => {
         return (
             catalogList
         )
-    }
-
+    };
 
     const addList = (ev) => {
         if (ev.key.toString().toLowerCase() === 'enter') {
             addCatalogInBoard(ev.target.value)
             ev.target.value = ''
         }
-    }
+    };
+
     function allowDrop (ev) {
         ev.preventDefault()
     }

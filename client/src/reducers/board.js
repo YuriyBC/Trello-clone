@@ -1,7 +1,9 @@
-import {addBoard} from '../utils/api'
-import {removeBoard} from '../utils/api'
+import {
+    addBoard,
+    removeBoard
+} from '../utils/api'
 
-const initialState = []
+const initialState = [];
 
 export default function boardList (state = initialState, action) {
     switch (action.type) {

@@ -19,8 +19,18 @@ export const getBoard = () => {
         })
 }
 
+export const setBoards = (payload) => {
+    const url = API + '/setboards';
+    return fetch(url, {
+        method: 'POST',
+        headers: headers.post,
+        body: JSON.stringify(payload)
+    })
+};
+
 export const addBoard = (payload) => {
-    const url = API + '/boards'
+    console.log(payload)
+    const url = API + '/boards';
     return fetch(url, {
         method: 'POST',
         headers: headers.post,

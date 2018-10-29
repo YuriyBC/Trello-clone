@@ -33,7 +33,8 @@ export const CreateBoardComponent = (props) => {
 
     return (
         isOpen ?
-        <div className="board__container board__block" onClick={switchBoxState}>
+        <div className="board__container board__block"
+             onClick={switchBoxState}>
             <div className="board__container title">
                 <p onClick={switchBoxState}>Create a new board...</p>
             </div>
