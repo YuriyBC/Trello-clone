@@ -33,11 +33,13 @@ const BOARDS_TABLE = 'boards';
 const CATALOG_TABLE = 'catalog';
 const TASKS_TABLE = 'taskscollection';
 
-let qrBoard = `CREATE TABLE IF NOT EXISTS ${BOARDS_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, PRIMARY KEY (id))`;
-let qrCatalog = `CREATE TABLE IF NOT EXISTS ${CATALOG_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, board int, PRIMARY KEY (id))`;
+let qrBoard = `CREATE TABLE IF NOT EXISTS ${BOARDS_TABLE} (id int NOT NULL, orders int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, PRIMARY KEY (id))`;
+let qrCatalog = `CREATE TABLE IF NOT EXISTS ${CATALOG_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, board int)`;
 let qrTasks = `CREATE TABLE IF NOT EXISTS ${TASKS_TABLE} (id int, board int, catalog int, title VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, isComplited VARCHAR(15))`;
 db.query(qrBoard);
-db.query(qrCatalog);
+db.query(qrCatalog, (err) => {
+    console.log(err)
+});
 db.query(qrTasks);
 
 app.get('/boards', function (req, res) {
@@ -51,12 +53,25 @@ app.get('/boards', function (req, res) {
 app.post('/boards', function (req, res) {
     if (req.originalUrl === '/boards') {
         const data = req.body;
-        let query = `INSERT INTO ${BOARDS_TABLE} (title, id) VALUES ('${data.title}', '${data.id}')`
+        console.log(req.body);
+        let query = `INSERT INTO ${BOARDS_TABLE} (title, id, orders) VALUES ('${data.title}', '${data.id}', ${data.order})`
         db.query(query, function (error, rows, fields) {
             res.status(200);
             res.send(data)
         })
     }
+});
+
+app.post('/setboards', function (req, res) {
+    const data = req.body;
+    let removeQuery = `DELETE from ${BOARDS_TABLE}`;
+
+    db.query(removeQuery, () => {
+        data.forEach((el) => {
+            let qr = `INSERT INTO ${BOARDS_TABLE} (title, id, orders) VALUES ('${el.title}', '${el.id}', '${el.order}')`;
+            db.query(qr)
+        });
+    });
 });
 
 app.delete('/boards', function (req, response) {

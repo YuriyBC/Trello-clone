@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import boardList from './board'
-import catalogList from './catalog'
+import boardList from './boardReducer'
+import catalogList from './catalogReducer'
 
 export default combineReducers({
     boardList,

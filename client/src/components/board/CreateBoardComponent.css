@@ -1,4 +1,5 @@
 .board__block {
+  opacity: 0.85;
   position: relative;
   background-color: white;
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -21,7 +22,8 @@
     text-decoration: none;
     color: black; }
   .board__block:hover {
-    transform: scaleX(1.03) scaleY(1.03); }
+    transform: scaleX(1.03) scaleY(1.03);
+    opacity: 1; }
   .board__block i {
     position: absolute;
     right: 5px;
@@ -39,7 +41,8 @@
   border-radius: 10px;
   font-size: 1.5rem;
   height: 90px;
-  transition: 0.2s; }
+  transition: 0.2s;
+  opacity: 1; }
   .board__container.title {
     display: flex;
     justify-content: center;

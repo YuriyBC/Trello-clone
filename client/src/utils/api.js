@@ -15,9 +15,12 @@ export const getBoard = () => {
         method: 'GET'
     }).then((resp) => resp.json())
         .then(function(data) {
+            data.forEach((el) => {
+               el.order = el.orders
+            });
           return data
         })
-}
+};
 
 export const setBoards = (payload) => {
     const url = API + '/setboards';

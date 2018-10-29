@@ -15,16 +15,18 @@
 
 .content__create {
     grid-row-gap: 40px;
+    z-index: 2;
     &-button {
         width: 145px;
         display: inline-block;
-        background-color: #0A2C74;
-        color: white;
+        background-color: white;
+        opacity: 0.8;
         font-size: 15px;
         padding: 40px 25px;
         cursor: pointer;
         border-radius: 5px;
         font-family: Verdana;
+        color: #232741;
         input {
             height: 30px;
             width: 100%;
@@ -77,5 +79,9 @@
     i {
         font-size: 1.2rem;
         color: white;
+    }
+    &.disable {
+        opacity: 0.3;
+        background: grey;
     }
 }

@@ -2,6 +2,7 @@ import _models from '../utils/models'
 import {addCatalog} from '../utils/api'
 import {changeCatalog} from '../utils/api'
 import {deleteCatalog} from '../utils/api'
+import methods from '../utils/_methods'
 
 const {
     CatalogItemModel,
@@ -51,7 +52,7 @@ export default function catalogList (state = initialState, action) {
                 const [boardId, catalogTitle] = payload
                 let newState = {...state};
                 if (!newState[+boardId]) newState[+boardId] = []
-                const catalog_id = newState[boardId].length
+                const catalog_id = methods.calculateNextId(newState[boardId])
 
                 const newObj = new CatalogItemModel(catalogTitle, catalog_id, boardId)
                 addCatalog(newObj);

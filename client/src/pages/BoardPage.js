@@ -37,8 +37,7 @@ class Main extends Component {
             const isNameUnique = namesOfExistingBoards.indexOf(val) === -1;
 
             if (isNameUnique) {
-                let newBoard = new BoardModel(val);
-
+                let newBoard = new BoardModel(val, this.props.state.boardList.length);
                 newBoard.id = calculateNextId(this.props.state.boardList);
                 this.props.actions({type: 'ADD_BOARD_IN_THE_LIST', payload: newBoard});
                 this.switchCreateContainerBox()
@@ -69,41 +68,29 @@ class Main extends Component {
                     put: ['.board__block']
                 },
                 onEnd: (ev) => {
-                    // if (ev.item.id) {
-                    //     let draggedBoard = this.props.state.boardList.find((el) => {
-                    //         return el.id === +ev.item.id
-                    //     });
-                    //
-                    //     let newIndex =  ev.newIndex -1;
-                    //     let oldIndex =  ev.oldIndex -1;
-                    //     let draggedPositionBoard = this.props.state.boardList[newIndex];
-                    //     this.props.state.boardList[newIndex] = draggedBoard;
-                    //     this.props.state.boardList[oldIndex] = draggedPositionBoard;
-                    //
-                    //     this.props.state.boardList.forEach((el, index) => {
-                    //         el.order = index
-                    //     });
-                    //
-                    //     this.props.actions({
-                    //         type: 'SET_STATE',
-                    //         payload: this.props.state.boardList
-                    //     })
-                    // }
-                    // console.log(this.props.state.boardList)
+                    if (ev.item.id) {
+                        let newIndex =  ev.newIndex -1;
+                        let oldIndex =  ev.oldIndex -1;
+                        let draggedBoard = this.props.state.boardList.find((el) => {
+                            return el.id === +ev.item.id
+                        });
+
+                        let draggedPositionBoard = this.props.state.boardList[newIndex];
+                        draggedPositionBoard.order = oldIndex;
+                        draggedBoard.order = newIndex;
+
+                        this.props.actions({
+                            type: 'SET_STATE',
+                            payload: this.props.state.boardList
+                        })
+                    }
                 }
             });
         };
-
-        this.setBackground = () => {
-            window.particlesJS.load('particles-js', '/particlesjs-config.json', () => {
-                console.log('sdcdc')
-            });
-        }
     }
 
     componentDidMount() {
         getBoard().then(res => {
-            this.setBackground();
             this.props.actions({type: 'SET_STATE', payload: res});
             this.setTableSortable();
         })
@@ -118,6 +105,12 @@ class Main extends Component {
             isOpen: this.state.isCreateBoardBoxOpened
         };
 
+        const sortedBoardsByOrder = (arr) => {
+            return arr.sort((a, b) => {
+                return a.order - b.order
+            })
+        };
+
         return (
             <div>
                 <div ref={this.boardTableRef} className="main">
@@ -126,7 +119,7 @@ class Main extends Component {
                     <BoardListComponent
                         toBoard={this.toBoard}
                         deleteBoard={this.deleteBoard}
-                        list={this.props.state.boardList}/>
+                        list={sortedBoardsByOrder(this.props.state.boardList)}/>
                 </div>
             </div>
         )

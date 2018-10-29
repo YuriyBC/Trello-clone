@@ -24,3 +24,10 @@ body {
 .main  div {
   text-align: center;
 }
+
+.AppBackround {
+  position: absolute;
+  width: 100%;
+  padding-top: 70px;
+  z-index: 0;
+}

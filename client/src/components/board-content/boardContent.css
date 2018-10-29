@@ -12,17 +12,19 @@
     border-radius: 5px; }
 
 .content__create {
-  grid-row-gap: 40px; }
+  grid-row-gap: 40px;
+  z-index: 2; }
   .content__create-button {
     width: 145px;
     display: inline-block;
-    background-color: #0A2C74;
-    color: white;
+    background-color: white;
+    opacity: 0.8;
     font-size: 15px;
     padding: 40px 25px;
     cursor: pointer;
     border-radius: 5px;
-    font-family: Verdana; }
+    font-family: Verdana;
+    color: #232741; }
     .content__create-button input {
       height: 30px;
       width: 100%;
@@ -69,3 +71,6 @@
   .content__remove i {
     font-size: 1.2rem;
     color: white; }
+  .content__remove.disable {
+    opacity: 0.3;
+    background: grey; }

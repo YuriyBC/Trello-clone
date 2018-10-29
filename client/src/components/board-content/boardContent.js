@@ -63,6 +63,10 @@ export const BoardContentComponent = (props) => {
         removeItemFromCatalog(payload)
     }
 
+    function getClassDeleteArea () {
+        return currentCatalogs && currentCatalogs.length ? 'content__remove' : 'content__remove disable'
+    }
+
     return (
         <div className="content">
             <div className="content__title">
@@ -78,7 +82,7 @@ export const BoardContentComponent = (props) => {
                         <div className="content__create-button" onClick={switchCreateMode}>
                             Add a list...
                         </div>
-                        <div className="content__remove"
+                        <div className={getClassDeleteArea()}
                              onDrop={removeItem}
                              onDragOver={allowDrop}>
                             <i className="fas fa-trash-alt"></i>
