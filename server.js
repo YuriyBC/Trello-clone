@@ -33,9 +33,9 @@ const BOARDS_TABLE = 'boards';
 const CATALOG_TABLE = 'catalog';
 const TASKS_TABLE = 'taskscollection';
 
-let qrBoard = `CREATE TABLE IF NOT EXISTS ${BOARDS_TABLE} (id int NOT NULL, orders int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, PRIMARY KEY (id))`;
-let qrCatalog = `CREATE TABLE IF NOT EXISTS ${CATALOG_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, board int)`;
-let qrTasks = `CREATE TABLE IF NOT EXISTS ${TASKS_TABLE} (id int, board int, catalog int, title VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, isComplited VARCHAR(15))`;
+const qrBoard = `CREATE TABLE IF NOT EXISTS ${BOARDS_TABLE} (id int NOT NULL, orders int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, PRIMARY KEY (id))`;
+const qrCatalog = `CREATE TABLE IF NOT EXISTS ${CATALOG_TABLE} (id int NOT NULL, title CHAR(130) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, board int)`;
+const qrTasks = `CREATE TABLE IF NOT EXISTS ${TASKS_TABLE} (id int, board int, catalog int, title VARCHAR(120) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, isComplited VARCHAR(15))`;
 db.query(qrBoard);
 db.query(qrCatalog, (err) => {
     console.log(err)
@@ -43,7 +43,7 @@ db.query(qrCatalog, (err) => {
 db.query(qrTasks);
 
 app.get('/boards', function (req, res) {
-    let query = `SELECT * from ${BOARDS_TABLE}`;
+    const query = `SELECT * from ${BOARDS_TABLE}`;
     db.query(query, function (error, resp) {
         res.status(200)
         res.send(resp)
@@ -54,7 +54,7 @@ app.post('/boards', function (req, res) {
     if (req.originalUrl === '/boards') {
         const data = req.body;
         console.log(req.body);
-        let query = `INSERT INTO ${BOARDS_TABLE} (title, id, orders) VALUES ('${data.title}', '${data.id}', ${data.order})`
+        const query = `INSERT INTO ${BOARDS_TABLE} (title, id, orders) VALUES ('${data.title}', '${data.id}', ${data.order})`
         db.query(query, function (error, rows, fields) {
             res.status(200);
             res.send(data)
@@ -64,11 +64,11 @@ app.post('/boards', function (req, res) {
 
 app.post('/setboards', function (req, res) {
     const data = req.body;
-    let removeQuery = `DELETE from ${BOARDS_TABLE}`;
+    const removeQuery = `DELETE from ${BOARDS_TABLE}`;
 
     db.query(removeQuery, () => {
         data.forEach((el) => {
-            let qr = `INSERT INTO ${BOARDS_TABLE} (title, id, orders) VALUES ('${el.title}', '${el.id}', '${el.order}')`;
+            const qr = `INSERT INTO ${BOARDS_TABLE} (title, id, orders) VALUES ('${el.title}', '${el.id}', '${el.order}')`;
             db.query(qr)
         });
     });
@@ -88,7 +88,7 @@ app.delete('/boards', function (req, response) {
         db.query(`SELECT * FROM ${BOARDS_TABLE}`, function (error, res) {
             res.forEach((board) => {
                 if (board.id === id) {
-                    let sql = `DELETE FROM ${BOARDS_TABLE} WHERE id = ${id}`;
+                    const sql = `DELETE FROM ${BOARDS_TABLE} WHERE id = ${id}`;
                     db.query(sql)
                 }
             })
@@ -105,11 +105,11 @@ app.get('/catalog', function (req, res) {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
     const boardId = req.query.boardId;
-    let qeeryTasks = `SELECT * FROM ${TASKS_TABLE} WHERE board = ${+boardId}`;
-    let query = `SELECT *  FROM catalog WHERE board = ${+boardId}`;
+    const qeeryTasks = `SELECT * FROM ${TASKS_TABLE} WHERE board = ${+boardId}`;
+    const query = `SELECT *  FROM catalog WHERE board = ${+boardId}`;
     db.query(query, function(error, success) {
         if (success) {
-            let resultData = [...success];
+            const resultData = [...success];
             db.query(qeeryTasks, function (er, tasks) {
                 resultData.map((catalog) => {
                     catalog.tasks = [];
@@ -131,7 +131,7 @@ app.get('/catalog', function (req, res) {
 
 app.post('/catalog', function (req, res) {
     if (req.originalUrl === '/catalog') {
-        let data = req.body;
+        const data = req.body;
             const query = `INSERT INTO catalog (id, title, board) VALUES (${data.id}, '${data.title}', '${data.boardId}')`
             db.query(query, function (er, suc) {
                 if (!er) {
@@ -160,9 +160,9 @@ app.delete('/catalog', function (req, res) {
 });
 
 app.post('/tasks', function (req, res) {
-    let allTasks = req.body.data;
-    let boardId = req.body.boardId;
-    let query = 'SELECT * from taskscollection';
+    const allTasks = req.body.data;
+    const boardId = req.body.boardId;
+    const query = 'SELECT * from taskscollection';
 
     db.query(`DELETE FROM ${TASKS_TABLE} WHERE board = ${boardId}`, (err, suc) => {
         allTasks.forEach((task) => {
