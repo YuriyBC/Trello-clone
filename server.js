@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
 var db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: ''    ,
     database: 'trello'
 });
 
